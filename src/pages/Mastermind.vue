@@ -21,7 +21,7 @@
         </div>
         <div class="flex gap-4 justify-center mt-4">
             <button class="px-3 py-2 rounded bg-slate-100" @click="undo">undo</button>
-            <button class="px-3 py-2 rounded bg-slate-100">go</button>
+            <button class="px-3 py-2 rounded bg-slate-100"@click="submitCombination">go</button>
             <button  class="px-3 py-2 rounded bg-slate-100" @click="test">test</button>
         </div>
     </main>
@@ -55,7 +55,7 @@
     }
 
     const undo = () => {
-        if (combination.value.length >= 1) {
+        if (lineIndex >= 1) {
             combinations.value[currentLine.value].children[lineIndex.value - 1].classList.remove(colorMap[lastColor.value])
             combination.value.pop()
             lineIndex.value--
@@ -64,7 +64,27 @@
         }
     }
 
+    const submitCombination = () => {
+        if (lineIndex.value == 4) {
+            goodPlacePawn()
+            wrongPlacePawn()
+            lineIndex.value = 0
+            currentLine.value--
+        }
+    }
+
+    const goodPlacePawn = () => {
+        console.log('good')
+    }
+
+    const wrongPlacePawn = () => {
+        console.log('wrong')
+    }
+
     const test = () => {
-        console.log(lineIndex.value)
+        console.table(
+            'current line: ' + currentLine.value,
+            'current Index: '+ lineIndex.value,
+        )
     }
 </script>
