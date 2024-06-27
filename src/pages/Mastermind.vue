@@ -25,3 +25,21 @@
         </div>
     </main>
 </template>
+
+<script setup>
+    import { ref } from 'vue'
+
+    const combination = ref([])
+
+    const add = (color) => {
+        if (combination.value.length < 4) {
+            combination.value.push(color)
+        }
+    }
+
+    const undo = () => {
+        if (combination.value.length >= 1) {
+            combination.value.pop()
+        }
+    }
+</script>
