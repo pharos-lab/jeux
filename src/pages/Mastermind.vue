@@ -2,10 +2,10 @@
     <main class="flex items-center flex-col">
         <div class="mastermind-grid bg-slate-200 divide-slate-300 divide-y">
             <div class="row flex divide-x divide-slate-300" v-for="n in 10">
-                <div class="combination flex gap-4 p-2" ref="combinations">
+                <div class="combination flex gap-4 p-2" ref="combinationsGrid">
                     <div class="size-7 rounded-full border bg-white" v-for="n in 4"></div>
                 </div>
-                <div class="result flex flex-wrap justify-center w-14 p-2" ref="results">
+                <div class="result flex flex-wrap justify-center w-14 p-2" ref="resultsGrid">
                     <div class="size-4 rounded-full border bg-white" v-for="n in 4"></div>
                 </div>
             </div>
@@ -31,8 +31,15 @@
     import { ref } from 'vue'
 
     const combination = ref([])
-    const combinations = ref()
-    const results = ref()
+    const combinationToFind = ['red', 'blue', 'green', 'red']
+    const combinations = ref([])
+    const combinationsGrid = ref()
+    const results = ref([])
+    const resultsGrid = ref()
+    const currentResult = ref({
+        'good': 0,
+        'bad': 0
+    })
     const currentLine = ref(9)
     const lineIndex = ref(0)
     const colorMap = {
@@ -49,14 +56,14 @@
         if (lineIndex.value < 4) {
             lastColor.value = color
             combination.value.push(color)
-            combinations.value[currentLine.value].children[lineIndex.value].classList.add(colorMap[color])
+            combinationsGrid.value[currentLine.value].children[lineIndex.value].classList.add(colorMap[color])
             lineIndex.value++
         }
     }
 
     const undo = () => {
-        if (lineIndex >= 1) {
-            combinations.value[currentLine.value].children[lineIndex.value - 1].classList.remove(colorMap[lastColor.value])
+        if (lineIndex.value >= 1) {
+            combinationsGrid.value[currentLine.value].children[lineIndex.value - 1].classList.remove(colorMap[lastColor.value])
             combination.value.pop()
             lineIndex.value--
             lastColor.value = combination.value.at(-1)
@@ -74,17 +81,30 @@
     }
 
     const goodPlacePawn = () => {
-        console.log('good')
+        combination.value.forEach((element, index) => {
+            if (element == combinationToFind[index]) {
+                combination.value[index] = 'a'
+                combinationToFind[index] = 'b'
+                currentResult.value['good']++
+            }
+        })
     }
 
     const wrongPlacePawn = () => {
-        console.log('wrong')
+        combination.value.forEach((element, index) => {
+            if (combinationToFind.includes(element)) {
+                combination.value[index] = 'x'
+                combinationToFind[combinationToFind.indexOf(element)] = 'y'
+                currentResult.value['bad']++
+            }
+        })
     }
 
     const test = () => {
         console.table(
             'current line: ' + currentLine.value,
             'current Index: '+ lineIndex.value,
+            'currrent result: ' + currentResult.value
         )
     }
 </script>
