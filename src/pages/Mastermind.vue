@@ -1,12 +1,12 @@
 <template>
     <main class="flex items-center flex-col">
-        <div class="mastermind-grid bg-slate-200 divide-slate-300 divide-y">
+        <div class="mastermind-grid bg-slate-300 divide-slate-400 divide-y">
             <div class="row flex divide-x divide-slate-300" v-for="n in 10">
                 <div class="combination flex gap-4 p-2" ref="combinationsGrid">
                     <div class="size-7 rounded-full border bg-white" v-for="n in 4"></div>
                 </div>
                 <div class="result flex flex-wrap justify-center w-14 p-2" ref="resultsGrid">
-                    <div class="size-4 rounded-full border bg-white" v-for="n in 4"></div>
+                    <div class="size-4 rounded-full border" v-for="n in 4"></div>
                 </div>
             </div>
         </div>
@@ -75,6 +75,7 @@
         if (lineIndex.value == 4) {
             goodPlacePawn()
             wrongPlacePawn()
+            drawResult()
             lineIndex.value = 0
             currentLine.value--
         }
@@ -98,6 +99,15 @@
                 currentResult.value['bad']++
             }
         })
+    }
+
+    const drawResult = () => {
+        for (let i = 0; i<currentResult.value['good']; i++) {
+            resultsGrid.value[currentLine.value].children[i].classList.add('bg-gray-200')
+        }
+        for (let i = 0; i<currentResult.value['bad']; i++) {
+            resultsGrid.value[currentLine.value].children[i + currentResult.value['good']].classList.add('bg-black')
+        }
     }
 
     const test = () => {
