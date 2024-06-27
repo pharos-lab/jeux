@@ -73,29 +73,38 @@
 
     const submitCombination = () => {
         if (lineIndex.value == 4) {
-            goodPlacePawn()
-            wrongPlacePawn()
+            const userCombination = [...combination.value]
+            const cpuCombination = [...combinationToFind]
+            goodPlacePawn(userCombination, cpuCombination)
+            wrongPlacePawn(userCombination, cpuCombination)
             drawResult()
+            console.log(currentResult.value)
             lineIndex.value = 0
             currentLine.value--
+            currentResult.value = {
+            'good': 0,
+            'bad': 0
+            }
         }
+        console.log(combination.value)
+        console.log(combinationToFind)
     }
 
-    const goodPlacePawn = () => {
-        combination.value.forEach((element, index) => {
-            if (element == combinationToFind[index]) {
-                combination.value[index] = 'a'
-                combinationToFind[index] = 'b'
+    const goodPlacePawn = (userCombination, cpuCombination) => {
+        userCombination.forEach((element, index) => {
+            if (element == cpuCombination[index]) {
+                userCombination[index] = 'a'
+                cpuCombination[index] = 'b'
                 currentResult.value['good']++
             }
         })
     }
 
-    const wrongPlacePawn = () => {
-        combination.value.forEach((element, index) => {
-            if (combinationToFind.includes(element)) {
-                combination.value[index] = 'x'
-                combinationToFind[combinationToFind.indexOf(element)] = 'y'
+    const wrongPlacePawn = (userCombination, cpuCombination) => {
+        userCombination.forEach((element, index) => {
+            if (cpuCombination.includes(element)) {
+                userCombination[index] = 'x'
+                cpuCombination[cpuCombination.indexOf(element)] = 'y'
                 currentResult.value['bad']++
             }
         })
