@@ -1,1 +1,1 @@
-<template>Mastermind</template>
+<template><div class="text-red-500">Mastermind</div></template>
