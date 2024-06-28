@@ -40,11 +40,9 @@
 import { ref } from 'vue'
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
-const combination = ref([])
 const combinationToFind = [...Array(4)].map(color => colors[Math.floor(Math.random() * 6)])
 const combinations = ref([...Array(10)].map(line => Array(4).fill('')))
 const results = ref([...Array(10)].map(line => Array(4).fill('')))
-const currentResult = ref([])
 const currentLine = ref(9)
 const combinationIndex = ref(0)
 const resultIndex = ref(0)
@@ -59,11 +57,9 @@ const colorMap = {
     'bad': 'bg-black',
     '': ''
 }
-const lastColor = ref('')
 
 const add = (color) => {
     if (combinationIndex.value < 4 && currentLine.value >= 0) {
-        lastColor.value = color
         combinations.value[currentLine.value][combinationIndex.value] = color
         combinationIndex.value++
     }
