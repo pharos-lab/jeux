@@ -3,7 +3,7 @@
         <div class="mastermind-grid bg-slate-300 divide-slate-400 divide-y">
             <div class="row flex divide-x divide-slate-300" v-for="n in 10">
                 <div class="combination flex gap-4 p-2" ref="combinationsGrid">
-                    <div class="size-7 rounded-full border bg-white" v-for="n in 4"></div>
+                    <div class="size-7 rounded-full border " v-for="n in 4"></div>
                 </div>
                 <div class="result flex flex-wrap justify-center w-14 p-2" ref="resultsGrid">
                     <div class="size-4 rounded-full border" v-for="n in 4"></div>
@@ -23,6 +23,11 @@
             <button class="px-3 py-2 rounded bg-slate-100" @click="undo">undo</button>
             <button class="px-3 py-2 rounded bg-slate-100"@click="submitCombination">go</button>
             <button  class="px-3 py-2 rounded bg-slate-100" @click="test">test</button>
+        </div>
+        <div class="self-stretch p-4">
+            <pre>combination: {{ combination }}
+            </pre>
+            <pre>to find: {{ combinationToFind }}</pre>
         </div>
     </main>
 </template>
@@ -78,16 +83,14 @@
             goodPlacePawn(userCombination, cpuCombination)
             wrongPlacePawn(userCombination, cpuCombination)
             drawResult()
-            console.log(currentResult.value)
             lineIndex.value = 0
             currentLine.value--
             currentResult.value = {
             'good': 0,
             'bad': 0
             }
+            combination.value = []
         }
-        console.log(combination.value)
-        console.log(combinationToFind)
     }
 
     const goodPlacePawn = (userCombination, cpuCombination) => {
