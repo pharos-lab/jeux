@@ -39,8 +39,9 @@
 <script setup>
 import { ref } from 'vue'
 
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const combination = ref([])
-const combinationToFind = ['red', 'blue', 'green', 'red']
+const combinationToFind = [...Array(4)].map(color => colors[Math.floor(Math.random() * 6)])
 const combinations = ref([...Array(10)].map(line => Array(4).fill('')))
 const combinationsGrid = ref()
 const results = ref([...Array(10)].map(line => Array(4).fill('')))
