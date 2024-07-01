@@ -38,7 +38,7 @@
 
         <div class="flex gap-4 justify-center mt-4" v-show="mode == 'cpu'">
             <button class="px-3 py-2 rounded bg-slate-100" @click="undoResult">undo</button>
-            <button class="px-3 py-2 rounded bg-slate-100" @click="submitResult" >go result</button>
+            <button class="px-3 py-2 rounded bg-slate-100" @click="start" >go result</button>
         </div>
         <div class="self-stretch p-4">
 
@@ -52,6 +52,15 @@
 <script setup>
 import { ref } from 'vue'
 
+const intToColor = {
+    0: 'red',
+    1: 'orange',
+    2: 'yellow',
+    3: 'green',
+    4: 'blue',
+    5: 'purple'
+}
+const allCombinations = ref([])
 const mode = ref('user')
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const combinationToFind = [...Array(4)].map(color => colors[Math.floor(Math.random() * 6)])
@@ -91,41 +100,72 @@ const submitCombination = () => {
     if (combinationIndex.value == 4) {
         const userCombination = [...combinations.value[currentLine.value]]
         const cpuCombination = [...combinationToFind]
-        goodPlacePawn(userCombination, cpuCombination)
-        wrongPlacePawn(userCombination, cpuCombination)
+        results.value[currentLine.value] = compareCombinations(userCombination, cpuCombination)
         combinationIndex.value = 0
         resultIndex.value = 0
         currentLine.value--
     }
 }
 
-const goodPlacePawn = (userCombination, cpuCombination) => {
-    userCombination.forEach((element, index) => {
-        if (element == cpuCombination[index]) {
-            userCombination[index] = 'a'
-            cpuCombination[index] = 'b'
-            results.value[currentLine.value][resultIndex.value] = 'good'
-            resultIndex.value++
+const compareCombinations = (combination, toFind) => {
+    let result = ["", "", "", ""]
+    let resultIndex = 0
+    let combi = [...combination]
+    let combiToFind = [...toFind]
+
+    combi.forEach((element, index) => {
+        if (element == combiToFind[index]) {
+            combi[index] = 'a'
+            combiToFind[index] = 'b'
+            result[resultIndex] = 'good'
+            resultIndex++
         }
     })
-}
 
-const wrongPlacePawn = (userCombination, cpuCombination) => {
-    userCombination.forEach((element, index) => {
-        if (cpuCombination.includes(element)) {
-            userCombination[index] = 'x'
-            cpuCombination[cpuCombination.indexOf(element)] = 'y'
-            results.value[currentLine.value][resultIndex.value] = 'bad'
-            resultIndex.value++
+    combi.forEach((element, index) => {
+        if (combiToFind.includes(element)) {
+            combi[index] = 'x'
+            combiToFind[combiToFind.indexOf(element)] = 'y'
+            result[resultIndex] = 'bad'
+            resultIndex++
         }
     })
+    
+    return result
 }
 
-const test = () => {
-    console.table(
-        'current line: ' + currentLine.value,
-        'current Index: ' + combinationIndex.value,
-        'currrent result: ' + currentResult.value
-    )
+const start = () => {
+    initAllCombinations()
+    
+    console.log(allCombinations.value)
+    combinationIndex.value = 0
+    resultIndex.value = 0
+    currentLine.value--
+    let index = 0
+    while (allCombinations.value.length != 1 ) {
+        let combination = [...allCombinations.value[0]]
+        let toFind = [...combinationToFind]
+        let result = compareCombinations(combination, toFind)
+
+        allCombinations.value = allCombinations.value.filter((element) => {
+            return JSON.stringify(result) == JSON.stringify(compareCombinations(combination, element));
+        })
+        console.log(index)
+        console.log(allCombinations.value)
+        index++
+    }
+}
+
+const initAllCombinations = () => {
+    for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+            for (let k = 0; k < 6; k++) {
+                for (let l = 0; l < 6; l++) {
+                    allCombinations.value.push([intToColor[i], intToColor[j], intToColor[k], intToColor[l]])
+                }
+            }
+        }
+    }
+    console.log(allCombinations)
 }
 </script>
